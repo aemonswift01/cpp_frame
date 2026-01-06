@@ -4,7 +4,7 @@ function(cc_library name)
     configure_file(${CMAKE_SOURCE_DIR}/cmake/dll.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/${name}_export.h)
 
     #是否是动态库
-    option(${name}_SHARED "OFF is static" ON)
+    option(${name}_SHARED "OFF is static" OFF)
     set(TYPE STATIC)
     if (${name}_SHARED)
         set(TYPE SHARED)
@@ -24,11 +24,12 @@ function(cc_library name)
 
 
     target_include_directories(${name} PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-    target_compile_features(${name} PUBLIC 
+    target_compile_features(${name} PRIVATE 
         cxx_std_20
     )
 
@@ -79,6 +80,7 @@ function(cc_library name)
         target_compile_definitions(${name} PUBLIC ${name}_STATIC)
     endif()
 
+    set(BUILD_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/build_out)
 
     build_output(${name})
 
@@ -91,29 +93,30 @@ function(cc_library name)
         PUBLIC_HEADER "${H_FILE_I}"
     )
 
-    # install(TARGETS ${name} 
-    #     EXPORT ${name}
-    #     RUNTIME DESTINATION bin
-    #     LIBRARY DESTINATION lib
-    #     ARCHIVE DESTINATION lib
-    #     PUBLIC_HEADER DESTINATION include
-    # )
+    install(TARGETS ${name} 
+        EXPORT ${name}
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        PUBLIC_HEADER DESTINATION include
+    )
 
-    # install(EXPORT ${name} FILE  ${name}Config.cmake
-    #     DESTINATION lib/cmake/${name}-${VERSION}/
-    # )
+    install(EXPORT ${name} FILE  ${name}Config.cmake
+        DESTINATION lib/cmake/${name}-${VERSION}/
+    )
+ 
     
-    # set(GENERATE_CMAKE_DIR ${BUILD_OUTPUT_DIR}/cmake/${name}-${VERSION})
-    # include(CMakePackageConfigHelpers)
-    # write_basic_package_version_file(
-    #     ${GENERATE_CMAKE_DIR}/${name}ConfigVersion.cmake
-    #     VERSION ${VERSION}
-    #     COMPATIBILITY SameMajorVersion
-    # )
+    set(GENERATE_CMAKE_DIR ${BUILD_OUTPUT_DIR}/cmake/${name}-${VERSION})
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file(
+        ${GENERATE_CMAKE_DIR}/${name}ConfigVersion.cmake
+        VERSION ${VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
 
-    # install(FILES ${GENERATE_CMAKE_DIR}/${name}ConfigVersion.cmake
-    #     DESTINATION lib/cmake/${name}-${VERSION}/
-    # )
+    install(FILES ${GENERATE_CMAKE_DIR}/${name}ConfigVersion.cmake
+        DESTINATION lib/cmake/${name}-${VERSION}/
+    )
 
     message(STATUS "==================================")
 endfunction()
@@ -122,7 +125,6 @@ endfunction()
 function(build_output name)
     set(CONF_TYPES Debug Release MinSizeRel RelWithDebInfo) 
     list(APPEND CONF_TYPES "")
-    set(BUILD_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/build_out)
     foreach(type IN LISTS CONF_TYPES)
         set(conf "")
         if (type)
