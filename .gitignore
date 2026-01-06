@@ -1,5 +1,11 @@
 ### AL ###
 #Template for AL projects for Dynamics 365 Business Central
+
+#generated files
+src/config/config.h
+
+*_export.h
+
 #launch.json folder
 .vscode/
 #Cache folder
