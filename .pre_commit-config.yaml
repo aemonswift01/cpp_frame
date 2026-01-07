@@ -1,0 +1,20 @@
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v18.1.3  # 与你本地 clang-format 版本尽量一致
+    hooks:
+      - id: clang-format
+        types_or: [c++, c, cuda, proto]  # 根据项目调整
+
+  # 可选：其他语言
+  # - repo: https://github.com/psf/black
+  #   rev: 24.4.2
+  #   hooks:
+  #     - id: black
+
+
+
+# pip install pre-commit
+
+## 在项目根目录运行
+# pre-commit install
