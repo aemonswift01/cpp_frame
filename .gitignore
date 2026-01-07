@@ -4,6 +4,14 @@
 #generated files
 src/config/config.h
 
+deps
+
+build
+
+build_out 
+
+install
+
 *_export.h
 
 #launch.json folder

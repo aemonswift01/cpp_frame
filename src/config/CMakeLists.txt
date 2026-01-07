@@ -16,3 +16,9 @@ target_include_directories(config INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
 )
+
+
+# 根据实际文件调整,若头文件依赖此文件，则需要导出
+# install(FILES config.h DESTINATION include)
+
+

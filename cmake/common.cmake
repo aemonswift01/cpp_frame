@@ -23,11 +23,18 @@ function(cc_library name)
 
 
 
+    get_target_property(CONFIG_INCLUDE_DIRS config INTERFACE_INCLUDE_DIRECTORIES)
+
     target_include_directories(${name} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+       # PRIVATE ${CMAKE_SOURCE_DIR}/src/config
+       PRIVATE ${CONFIG_INCLUDE_DIRS}
     )
+
+
+
 
     target_compile_features(${name} PRIVATE 
         cxx_std_20
@@ -85,15 +92,17 @@ function(cc_library name)
     build_output(${name})
 
 
-    set_target_properties(${name} PROPERTIES 
-        DEBUG_POSTFIX "d"
-    )
+    if (MSVC)
+        set_target_properties(${name} PROPERTIES 
+            DEBUG_POSTFIX "d"
+        )
+    endif()
 
     set_target_properties(${name} PROPERTIES 
         PUBLIC_HEADER "${H_FILE_I}"
     )
 
-    install(TARGETS ${name} 
+    install(TARGETS ${name}
         EXPORT ${name}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib

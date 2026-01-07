@@ -10,10 +10,23 @@ project(xlog)
 
 include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 cc_library(${PROJECT_NAME})
 
 
-target_link_libraries(${PROJECT_NAME} PUBLIC config)
+# target_link_libraries(${PROJECT_NAME} PRIVATE config)
 
 
 #[[
