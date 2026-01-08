@@ -36,7 +36,7 @@ endmacro()
 function(cc_test name)
     cc_executable_internal(${ARGV})
 
-    build_output(${name} ${BUILD_OUTPUT_TEST_DIR})
+    build_output(${name} ${BUILD_OUTPUT_TEST_DIR} TRUE)
 
     add_test(NAME ${name} COMMAND ${name})
 endfunction()
@@ -179,6 +179,10 @@ endfunction()
 
 
 function(build_output name output_dir)
+    set(output_dir_bin ${output_dir}/bin)
+    if (${ARGV2})
+        set(output_dir_bin ${output_dir})
+    endif()
     set(CONF_TYPES Debug Release MinSizeRel RelWithDebInfo) 
     list(APPEND CONF_TYPES "")
     foreach(type IN LISTS CONF_TYPES)
@@ -187,10 +191,10 @@ function(build_output name output_dir)
             string(TOUPPER _${type} conf)
         endif()
         set_target_properties(${name} PROPERTIES 
-            RUNTIME_OUTPUT_DIRECTORY${conf} ${output_dir}/bin #dll pdb exe 执行程序
+            RUNTIME_OUTPUT_DIRECTORY${conf} ${output_dir_bin} #dll pdb exe 执行程序
             LIBRARY_OUTPUT_DIRECTORY${conf} ${output_dir}/lib # .so .dylib 动态库导出文件
             ARCHIVE_OUTPUT_DIRECTORY${conf} ${output_dir}/lib # .lib .a 静态库导出文件
-            PDB_OUTPUT_DIRECTORY${conf} ${output_dir}/bin #pdb
+            PDB_OUTPUT_DIRECTORY${conf} ${output_dir_bin} #pdb
         )
     endforeach()
 endfunction()

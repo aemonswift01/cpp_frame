@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.30)
 
 project(cpp_frame)
 
+#===============config======================
+option(ENABLE_FAILPOINT "Enable failpoint (test only)" ON)
+
+option(BUILD_TEST "build test" OFF)
+
+option(ENABLE_COVERAGE "Enable coverage build" ON)
+
+#===========================================
 
 #===================config.h.in===================
 set(DEBUG 1)
@@ -35,9 +43,6 @@ fetch_content(googletest
 
 
 #==================coverage===================
-option(BUILD_TEST "build test" OFF)
-
-option(ENABLE_COVERAGE "Enable coverage build" ON)
 
 if (ENABLE_COVERAGE) 
     set(BUILD_TEST ON)
@@ -58,6 +63,7 @@ endif()
 
 add_subdirectory(src)
 
+add_subdirectory(tools)
 
 
 #============test===================
