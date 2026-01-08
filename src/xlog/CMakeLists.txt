@@ -10,19 +10,6 @@ project(xlog)
 
 include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 cc_library(${PROJECT_NAME})
 
 

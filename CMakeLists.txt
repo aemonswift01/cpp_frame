@@ -2,10 +2,20 @@ cmake_minimum_required(VERSION 3.30)
 
 project(cpp_frame)
 
+
+#===================config.h.in===================
+set(DEBUG 1)
+set(VERSION "0.0.1")
+set(MAX_THREADS 5)
+#==================================================
+
+
+#==================build====================
 set(BUILD_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/build_out)
 if(CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
+#===========================================
 
 
 #==================deps===================
@@ -22,6 +32,9 @@ fetch_content(googletest
 #=========================================
 
 
+
+
+#==================coverage===================
 option(BUILD_TEST "build test" OFF)
 
 option(ENABLE_COVERAGE "Enable coverage build" ON)
@@ -38,15 +51,7 @@ if (ENABLE_COVERAGE)
         message(WARNING "Coverage not supported for ${CMAKE_CXX_COMPILER_ID}")
     endif()
 endif()
-
-
-
-
-#===================config.h.in===================
-set(DEBUG 1)
-set(VERSION "0.0.1")
-set(MAX_THREADS 5)
-#==================================================
+#============================================
 
 
 
@@ -55,14 +60,18 @@ add_subdirectory(src)
 
 
 
+#============test===================
 if (BUILD_TEST) 
-    message("build test")
+    #message("build test")
     # cd build && ctest --verbose     # 使用 ctest（推荐）
     enable_testing()
     add_subdirectory(tests)
 endif()
+#===================================
 
 
+
+#============generate html=================
 if(ENABLE_COVERAGE AND (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"))
     find_program(GCOVR_PATH gcovr)
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/coverage_report)
@@ -91,3 +100,4 @@ make coverage
 cmake --build build --target coverage
 
 ]]
+#=========================================
